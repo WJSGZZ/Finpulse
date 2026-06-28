@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>认识你自己 · 投资者画像</title>
+<style>
+  :root{
+    --ink:#1A2421; --ink-soft:#26312A;
+    --paper:#F4F2EA; --paper-track:#E6E2D5; --line:#DCD7C8;
+    --text:#23282A; --muted:#71746C;
+    --gold:#A2793B; --gold-soft:rgba(162,121,59,.09);
+    --on-dark:#ECE7DA; --on-dark-muted:#9AA199; --gold-on-dark:#CBA45E;
+    --serif:"Songti SC","STSong","Source Han Serif SC","Source Han Serif CN","Noto Serif CJK SC","Noto Serif SC",Georgia,"Times New Roman",serif;
+    --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    --col:38rem;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:var(--sans); background:var(--paper); color:var(--text);
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    height:100vh; height:100dvh; overflow:hidden;}
+  ::selection{background:rgba(162,121,59,.18)}
+  button{font-family:inherit}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px}
+
+  /* ---------- 封面 ---------- */
+  .cover{position:fixed; inset:0; z-index:20; overflow-y:auto;
+    background:var(--ink); color:var(--on-dark);}
+  .cover.is-leaving{opacity:0;transition:opacity .5s ease}
+  .cover__inner{min-height:100%; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; text-align:center; padding:4.5vh 7vw;}
+  .cover__eyebrow{font-size:.72rem; letter-spacing:.42em; text-transform:uppercase;
+    color:var(--gold-on-dark); margin-bottom:1.3rem; padding-left:.42em;}
+  .cover__title{font-family:var(--serif); font-weight:400;
+    font-size:clamp(2.5rem,8vw,3.7rem); line-height:1.06; letter-spacing:.06em; color:#F3EFE3;}
+  .cover__mirror{font-family:var(--serif); font-weight:400;
+    font-size:clamp(2.9rem,9vw,4.4rem); line-height:1.06; letter-spacing:.06em;
+    transform:scaleY(-1); color:#F3EFE3; opacity:.10; margin-top:.1em; filter:blur(.4px);
+    -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.85),transparent 62%);
+    mask-image:linear-gradient(to bottom,rgba(0,0,0,.85),transparent 62%);
+    pointer-events:none; user-select:none;}
+  .cover__rule{width:30px;height:1px;background:var(--gold-on-dark);opacity:.7;margin:1.1rem 0 1.3rem}
+  .cover__lede{max-width:27rem}
+  .cover__lede p{font-family:var(--serif); font-size:1rem; line-height:1.82;
+    color:#DCD8CB; margin-bottom:1rem;}
+  .cover__meta{font-size:.76rem; letter-spacing:.04em; color:var(--on-dark-muted); margin:1.2rem 0 1.6rem;}
+
+  .choices__prompt{font-size:.74rem; letter-spacing:.24em; color:var(--on-dark-muted); margin-bottom:1rem}
+  .choices{display:flex; gap:1.1rem; flex-wrap:wrap; justify-content:center; max-width:40rem}
+  .choice{flex:1 1 230px; max-width:290px; text-align:left;
+    display:flex; flex-direction:column; justify-content:flex-start;
+    border:1px solid rgba(203,164,94,.34); background:rgba(255,255,255,.014);
+    padding:1.25rem 1.4rem 1.35rem; cursor:pointer; color:var(--on-dark);
+    transition:background .32s ease,border-color .32s ease,transform .32s ease;}
+  .choice:hover{background:rgba(203,164,94,.08); border-color:rgba(203,164,94,.72); transform:translateY(-3px)}
+  .choice--reco{border-color:rgba(203,164,94,.62)}
+  .choice__name{font-family:var(--serif); font-size:1.55rem; color:#F3EFE3;
+    display:flex; align-items:baseline; gap:.7rem; line-height:1.1}
+  .choice__tag{font-family:var(--sans); font-size:.6rem; letter-spacing:.2em; color:#23211c;
+    background:var(--gold-on-dark); padding:.18rem .55rem; border-radius:2px; align-self:center}
+  .choice__meta{font-size:.76rem; letter-spacing:.06em; color:var(--gold-on-dark); margin:.75rem 0 .85rem}
+  .choice__desc{font-family:var(--serif); font-size:.95rem; line-height:1.78; color:#CFCBBE}
+
+  .reveal{opacity:0;transform:translateY(12px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+  .d1{animation-delay:.05s}.d2{animation-delay:.2s}.d3{animation-delay:.38s}.d4{animation-delay:.56s}.d5{animation-delay:.74s}.d6{animation-delay:.92s}
+  @keyframes rise{to{opacity:1;transform:none}}
+
+  /* ---------- 正文舞台 ---------- */
+  .stage{height:100vh; height:100dvh; display:flex; flex-direction:column; overflow:hidden;
+    max-width:var(--col); margin:0 auto; padding:clamp(1rem,3.4vw,2.2rem) 1.4rem clamp(1rem,3vw,1.7rem);}
+  .top{flex:0 0 auto; padding-top:.2rem}
+  .top__row{display:flex; justify-content:space-between; align-items:baseline; gap:1rem}
+  .chapter{font-size:.74rem; letter-spacing:.2em; color:var(--gold);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .count{font-size:.74rem; letter-spacing:.14em; color:var(--muted); white-space:nowrap;
+    font-variant-numeric:tabular-nums}
+  .track{height:1px; background:var(--paper-track); margin-top:.95rem; position:relative}
+  .track__fill{position:absolute; inset:0 auto 0 0; width:0; background:var(--gold);
+    transition:width .5s cubic-bezier(.2,.7,.2,1)}
+
+  .body{flex:1 1 auto; min-height:0; overflow-y:auto;
+    display:flex; flex-direction:column; padding:1.4rem 0}
+  .body::-webkit-scrollbar,.profile-box::-webkit-scrollbar{width:6px}
+  .body::-webkit-scrollbar-thumb,.profile-box::-webkit-scrollbar-thumb{background:var(--paper-track);border-radius:3px}
+  .card{opacity:1; margin:auto 0}
+  .card.turn{animation:turn .42s cubic-bezier(.2,.7,.2,1)}
+  @keyframes turn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+
+  .q{font-family:var(--serif); font-weight:400; color:#1f2522;
+    font-size:clamp(1.5rem,4.4vw,1.98rem); line-height:1.44; letter-spacing:.01em;}
+  .why{font-family:var(--serif); color:var(--muted);
+    font-size:1rem; line-height:1.88; margin-top:1rem; max-width:33rem;}
+  .hint{font-size:.75rem; letter-spacing:.1em; color:var(--gold); margin-top:.85rem}
+
+  .opts{margin-top:2rem; list-style:none}
+  .opt{display:flex; align-items:flex-start; gap:.95rem; width:100%; text-align:left;
+    border:0; border-bottom:1px solid var(--line); background:transparent;
+    font-family:var(--sans); font-size:1.04rem; line-height:1.5; color:var(--text);
+    padding:.95rem .2rem; cursor:pointer;
+    transition:background .26s ease,padding-left .26s ease,color .26s ease;}
+  .opt:first-child{border-top:1px solid var(--line)}
+  .opt:hover{background:var(--gold-soft); padding-left:.7rem}
+  .opt__idx{font-family:var(--serif); font-size:1rem; color:#B8B2A1; min-width:1.3em;
+    line-height:1.5; transition:color .26s ease; font-variant-numeric:tabular-nums;}
+  .opt__label{flex:1}
+  .opt.sel{color:#1c2220}
+  .opt.sel .opt__idx{color:var(--gold)}
+  .opt.sel .opt__label{box-shadow:inset 0 -.55em 0 rgba(162,121,59,.13)}
+
+  .nav{flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding-top:.4rem}
+  .back{appearance:none; border:0; background:transparent; color:var(--muted);
+    font-size:.9rem; letter-spacing:.05em; cursor:pointer; padding:.5rem .2rem; transition:color .26s ease;}
+  .back:hover{color:var(--text)}
+  .next{appearance:none; border:1px solid var(--gold); background:transparent; color:var(--gold);
+    font-size:.9rem; letter-spacing:.13em; padding:.72rem 1.8rem; cursor:pointer;
+    transition:background .3s ease,color .3s ease,opacity .3s ease;}
+  .next:hover{background:var(--gold-soft)}
+  .next:disabled{border-color:var(--line); color:#BFBAAC; cursor:default; background:transparent}
+  .next .arr{margin-left:.5em}
+
+  /* ---------- 画像（终章） ---------- */
+  .sum__title{font-family:var(--serif); font-weight:400; font-size:clamp(1.9rem,5.4vw,2.45rem);
+    color:#1f2522; letter-spacing:.04em}
+  .sum__lede{font-family:var(--serif); color:var(--muted); font-size:1.02rem; line-height:1.9;
+    margin-top:1rem; max-width:33rem}
+  .recap{margin:2rem 0 .4rem; border-top:1px solid var(--line)}
+  .recap__row{display:flex; gap:1.1rem; padding:.66rem .1rem; border-bottom:1px solid var(--line); align-items:baseline}
+  .recap__k{flex:0 0 7.2rem; font-size:.76rem; letter-spacing:.1em; color:var(--gold)}
+  .recap__v{flex:1; font-family:var(--serif); font-size:1.02rem; color:#2a302c; line-height:1.5}
+
+  .copy-card{margin-top:2.2rem; background:#FBFAF5; border:1px solid var(--line);
+    border-top:2px solid var(--gold); padding:1.4rem 1.4rem 1.5rem; border-radius:2px}
+  .copy-card__hd{font-family:var(--sans); font-size:.92rem; line-height:1.7; color:#3a403c; margin-bottom:1rem}
+  .copy-card__hd b{color:var(--gold); font-weight:600}
+  .profile-box{font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+    font-size:.8rem; line-height:1.8; color:#3a403c; white-space:pre-wrap; word-break:break-word;
+    background:#fff; border:1px solid var(--line); border-radius:2px; padding:1rem 1.1rem;
+    max-height:38vh; overflow:auto; cursor:text;}
+  .profile-box:focus-visible{outline:2px solid var(--gold); outline-offset:1px}
+  .actions{display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap; margin-top:1.1rem}
+  .copy{appearance:none; border:1px solid var(--gold); background:var(--gold); color:#FBF8F0;
+    font-size:.92rem; letter-spacing:.1em; padding:.78rem 1.9rem; cursor:pointer;
+    transition:opacity .3s ease,transform .15s ease;}
+  .copy:hover{opacity:.92}
+  .copy:active{transform:translateY(1px)}
+  .copy-hint{font-size:.82rem; color:var(--muted); letter-spacing:.02em}
+
+  .handoff{font-family:var(--serif); font-size:1.02rem; line-height:1.9; color:#2a302c;
+    margin:2rem 0 0; max-width:34rem}
+  .restart-row{margin-top:1.6rem}
+  .restart{appearance:none; border:0; background:transparent; color:var(--muted);
+    font-size:.86rem; letter-spacing:.05em; cursor:pointer; text-decoration:underline;
+    text-underline-offset:3px; text-decoration-color:var(--line)}
+  .restart:hover{color:var(--text)}
+  .foot{margin-top:2.4rem; padding-top:1.2rem; border-top:1px solid var(--line);
+    font-size:.75rem; line-height:1.8; color:#9A9D94; max-width:34rem}
+
+  .sum__lede b{color:var(--gold); font-weight:600}
+  .restart-row{margin-top:1.2rem; display:flex; align-items:center; gap:.9rem; flex-wrap:wrap}
+  .foot-inline{font-size:.72rem; color:#9A9D94; letter-spacing:.02em}
+
+  @media (max-height:680px){
+    .body{padding:.9rem 0}
+    .q{font-size:clamp(1.3rem,4.3vw,1.7rem); line-height:1.4}
+    .why{font-size:.94rem; line-height:1.68; margin-top:.7rem}
+    .opt{padding:.64rem .2rem; font-size:1rem}
+    .opts{margin-top:1.05rem}
+    .profile-box{max-height:32vh}
+  }
+  @media (max-height:560px){
+    .why{font-size:.88rem; line-height:1.52; margin-top:.5rem}
+    .opt{padding:.52rem .2rem}
+    .opts{margin-top:.75rem}
+  }
+  @media (max-width:560px){
+    .recap__k{flex-basis:5.8rem; letter-spacing:.06em}
+    .cover__lede p{font-size:.98rem}
+    .cover__title,.cover__mirror{font-size:clamp(2.5rem,11vw,3.1rem)}
+    .choice{flex-basis:100%; max-width:340px; padding:1.1rem 1.2rem 1.2rem}
+    .choice__desc{font-size:.9rem; line-height:1.64}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important; transition:none!important}
+    .reveal{opacity:1; transform:none}
+    .card{opacity:1}
+  }
+</style>
+</head>
+<body>
+
+  <!-- 封面 -->
+  <section class="cover" id="cover" aria-label="开始">
+    <div class="cover__inner">
+      <div class="cover__eyebrow reveal d1">投资者画像</div>
+      <h1 class="cover__title reveal d2">认识你自己</h1>
+      <div class="cover__rule reveal d3"></div>
+      <div class="cover__lede">
+        <p class="reveal d3">好的方案从不为“市场”而设，只为“你”而设。下面的问题无关对错，只关乎你——答得越诚实，随后的建议就越能稳稳落在你身上。</p>
+      </div>
+      <div class="cover__meta reveal d5">答案只停在这块屏幕上，不保存，不上传</div>
+
+      <div class="reveal d6" style="display:flex;flex-direction:column;align-items:center">
+        <div class="choices__prompt">你想要哪一幅画像</div>
+        <div class="choices">
+          <button class="choice" data-tier="simple" type="button">
+            <div class="choice__name">速写</div>
+            <div class="choice__meta">八问 · 约 3 分钟</div>
+            <div class="choice__desc">寥寥几笔，勾出你最要紧的轮廓：为何而来、能担多少、在哪个市场。够用，但不够深。</div>
+          </button>
+          <button class="choice choice--reco" data-tier="deep" type="button">
+            <div class="choice__name">工笔<span class="choice__tag">推荐</span></div>
+            <div class="choice__meta">三十余问 · 约 10–12 分钟</div>
+            <div class="choice__desc">一笔一画，尽其深广——从目标、现金流、风险的心与身，到能力圈、择时倾向、家庭与保障、税务与杠杆。为想要一套真正专业方案的人而备。</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 正文 -->
+  <main class="stage" id="stage" hidden>
+    <div class="top">
+      <div class="top__row">
+        <div class="chapter" id="chapter"></div>
+        <div class="count" id="count"></div>
+      </div>
+      <div class="track"><div class="track__fill" id="fill"></div></div>
+    </div>
+    <div class="body"><div class="card" id="card"></div></div>
+    <nav class="nav">
+      <button class="back" id="backBtn">← 上一步</button>
+      <button class="next" id="nextBtn">继续<span class="arr">→</span></button>
+    </nav>
+  </main>
+
+<script>
+(function(){
+  "use strict";
+
+  /* 题库：所有问题的定义（速写与工笔共用，按需取用） */
+  var BANK = {
+    goal:{ key:"目标", type:"single",
+      q:"这笔钱，为了什么？",
+      why:"钱有了去处，心里才有了标尺。守住养老的底气，与放手追一场自由，要的是两套全然不同的章法。",
+      opts:["安放养老，攒一份退休后的从容","攒一笔确定的大额支出（购房、教育……）","长期增值，去够一够财务的自由","跑赢通胀，别让积蓄悄悄缩水","创造一份额外的现金流（如分红、利息）","还没太想清，先别让钱闲着"] },
+
+    goal2:{ key:"其他心愿", type:"multi", skippable:true,
+      q:"除了这一桩，还有别的心愿吗？",
+      hint:"可多选，也可以跳过",
+      why:"人很少只为一件事理财。把心底那些次要却真实的愿望也摆出来，方案才不会顾此失彼。",
+      opts:["给孩子留一笔","提前退休的自由","换一套更好的房子","一次说走就走的底气","应对未知的医疗或变故","传承给下一代","暂时没有别的"] },
+
+    horizon:{ key:"投资期限", type:"single",
+      q:"多久之内，你不会动它？",
+      why:"时间是波动的解药。放得越久，眼前的起落越不必怕，复利才有舒展的空隙；放得越短，就越要先守住本金。",
+      opts:["一年以内","一到三年","三到五年","五到十年","十年以上"] },
+
+    pockets:{ key:"资金结构", type:"single",
+      q:"这是一整笔长钱，还是混着近期要用的钱？",
+      why:"一笔钱里若藏着两种期限，就该用两套打法。短期要用的部分若进了波动的资产，是最常见、也最可惜的错。",
+      opts:["是一整笔，短期内都不必动","大部分是长钱，但有一小块近期要用","掺得比较杂，几笔不同期限混在一起","还没分清楚"] },
+
+    capital:{ key:"本金量级", type:"single",
+      q:"可投入的本金，大约在哪个量级？",
+      why:"不必精确——它只决定我们能动用多宽的工具，把风险分散到多细。",
+      opts:["十万以内","十万到五十万","五十万到两百万","两百万到一千万","一千万以上"] },
+
+    share:{ key:"这笔钱的分量", type:"single",
+      q:"这笔钱，占你可投资产的多大一块？",
+      why:"同样亏三成，对“闲钱”和“全副身家”是两回事。它占你家底越重，越输不起，风险就该收得越紧。",
+      opts:["一小部分（约四分之一以内）","大约一半","大部分","几乎是我全部的可投资金"] },
+
+    contrib:{ key:"持续投入", type:"single",
+      q:"往后，你还能持续地投进来吗？",
+      why:"每月一笔稳定的结余，是普通人最被低估的武器。它让你在下跌时自动越买越多，把别人的恐惧，悄悄换成你的从容。",
+      opts:["每月都能稳定攒下一些","偶尔有些余力","暂时，没有多余的钱","相反，我可能要陆续取用一部分"] },
+
+    income:{ key:"收入稳定性", type:"single",
+      q:"你的收入，稳吗？",
+      why:"同样的数目，一个旱涝保收的人，和一个时丰时歉的人，能担的风险天差地别。",
+      opts:["很稳（如体制内、长期合同）","大致平稳","起伏不小（如自由职业、创业、提成制）","暂无固定收入（如退休、待业、全职投资）"] },
+
+    debt:{ key:"负债", type:"single",
+      q:"你身上，有要还的债吗？",
+      why:"背着高息的债，先还清往往胜过去投资——还掉一笔年息十几个点的欠款，等于稳赚十几个点，市场可给不了这么确定的回报。",
+      opts:["没有","有，但利息很低（如房贷）","有利息不低的债（如信用卡分期、消费贷）","负债不轻，偿还已有些吃力"] },
+
+    family:{ key:"家庭责任", type:"single",
+      q:"你肩上，有需要供养的人吗？",
+      why:"风险能担多少，不只看账户，更看牵挂。上有老下有小、又是家里顶梁柱的人，输不起的，从来不止是钱。",
+      opts:["暂时只需顾好自己","有，但负担尚轻","需赡养老人或抚养孩子","我是全家主要的经济来源，担子不轻"] },
+
+    insurance:{ key:"保障", type:"single",
+      q:"万一有变故，你有保险兜着吗？",
+      why:"保险是投资的护栏。护栏没装好，就让本金去冒险，是把家庭的安危押在了运气上。",
+      opts:["重疾、医疗、寿险都较完善","有一些，但不算齐全","只有基础医保","几乎没有什么保障"] },
+
+    emergency:{ key:"应急储备", type:"single",
+      q:"手边的应急钱，够撑多久？",
+      why:"应急金是投资的地基。地基未稳，市场一震，你就可能被迫在最坏的时点割肉离场。",
+      opts:["够六个月以上的开销","三到六个月","不太够","几乎没有专门留"] },
+
+    risk_will:{ key:"风险意愿", type:"single",
+      q:"假如一年内，它账面上少了三分之一，你会怎么做？",
+      why:"这是整份问卷里最重的一问。嘴上说能扛多少，与真跌下来时扛不扛得住，往往是两个人——而后者，才决定你能走多远。这里没有标准答案，只有真实的你。",
+      opts:["不慌，反倒想再添一些","按住不动，等它缓过来","减掉一部分，先安心","大概会想清掉，夜里也睡不安稳"] },
+
+    risk_cap:{ key:"风险承受能力", type:"single",
+      q:"若它真的大亏，会动摇你的生活，或某个要紧的计划吗？",
+      why:"上一问量的是“心”，这一问量的是“身”。方案的风险，要取这两者里更低的那个——心与身，谁先撑不住，就听谁的。",
+      opts:["不会，这是输得起的闲钱","会有些影响，但挺得过去","会，那将动摇我的生活或计划","会动摇我的根本，那是我赔不起的钱"] },
+
+    history:{ key:"过往实战", type:"single",
+      q:"过去真遇上大跌时，你实际是怎么做的？",
+      why:"问“你能扛多少”，远不如问“你当时做了什么”。手最诚实——它会告诉你，你究竟是哪一种投资者。",
+      opts:["逢跌加仓，越跌越买","拿住没动，熬了过来","扛不住，割在了低点","还没真正经历过一轮大跌"] },
+
+    max_dd:{ key:"可忍受回撤", type:"single",
+      q:"这笔钱，你最深能跟它一起跌到哪儿，还睡得着？",
+      why:"把“能扛”落到一个具体的数。知道自己的底线在哪，才好把策略的风险，卡在这条线以内。",
+      opts:["最多一成（10%）","两成左右（20%）","三成多也忍得住（35%）","腰斩也不动摇（50% 以上）","完全说不准"] },
+
+    regret:{ key:"痛感倾向", type:"single",
+      q:"哪一种更让你难受——",
+      why:"有人怕亏钱，有人怕踏空。这两种痛，会把人推向相反的错误：一个让你过早离场，一个让你高位追入。先认清自己怕哪一头。",
+      opts:["看着账户缩水，亏掉本金","看着别人大赚，自己却踏空了","两种都难受，说不上更怕哪个"] },
+
+    expect:{ key:"收益预期", type:"single",
+      q:"你心里盼着，它每年大概能赚多少？",
+      why:"这一问，是给期待照个镜子。若想要的回报远高于愿担的风险，那中间的缺口，迟早要用失望或冒险来填——早点看见它，是好事。",
+      opts:["跑赢存款和通胀就好（约 3–5%）","稳健增值（约 6–10%）","明显跑赢大盘（约 10–20%）","越多越好，翻倍也不嫌多","没具体想过"] },
+
+    holdings:{ key:"现有资产", type:"multi",
+      q:"此刻，你的钱大致安放在哪些地方？",
+      hint:"可多选",
+      why:"新的一步，要放进你财务的整张版图里看——已在某处压了重注，便该在别处求一份分散。",
+      opts:["现金与存款","货币基金、银行理财","股票","基金 / ETF","债券","房产","黄金或大宗","加密资产","几乎还没有积蓄"] },
+
+    concentration:{ key:"集中持仓", type:"single",
+      q:"有没有哪一样，占得特别重？",
+      why:"把太多身家系在一处——某只票、某个行业、甚至自家公司的股票——是回撤最深的隐患。鸡蛋若都在一个篮子里，得先看清这个篮子。",
+      opts:["没有，还算分散","某只股票或基金占了大头","重仓押在某一个行业","自家公司的股票或期权占比很高","房产几乎是我的全部"] },
+
+    liquidity:{ key:"流动性需求", type:"single",
+      q:"近一两年，有预见得到的大笔开销吗？",
+      why:"要随时取用的钱，不能锁进会起落的资产里——这决定了多少钱，必须留在能立刻变现的地方。",
+      opts:["有，得随时能动用一部分","可能有，还不确定","没有特别的打算"] },
+
+    values:{ key:"约束与偏好", type:"multi",
+      q:"有没有你不愿碰的，或格外在意的？",
+      hint:"可多选",
+      why:"方案是为你而做，不是为“最优解”而做。你的底线与偏好，本就该被尊重。",
+      opts:["不碰加密资产","看重环境与社会责任","有特定的行业或信仰忌讳","只想守在我熟悉的少数领域","偏好能定期分红、派息的资产","没有特别的限制"] },
+
+    jurisdiction:{ key:"身份与辖区", type:"single",
+      q:"税务上，你大致是什么身份？",
+      why:"你在哪个辖区纳税、有没有海外身份与资产，决定了哪些工具可用、税怎么算——这是方案落地的法律水土。",
+      opts:["中国大陆居民，资产主要在境内","中国居民，但有部分境外资产","有海外身份或长期居于境外","不太清楚，情况有些复杂"] },
+
+    experience:{ key:"投资经验", type:"single",
+      q:"投资这条路，你走了多久？",
+      why:"完整地走过一轮牛熊、真切痛过一回的人，对风险的体会，和纸上谈兵者截然不同。",
+      opts:["才刚起步","一两年，浅尝过","有几年了，见过些涨跌","资深，穿过完整的牛市与熊市"] },
+
+    circle:{ key:"能力圈", type:"multi",
+      q:"这些里头，你真正算得上懂的有哪些？",
+      hint:"可多选。“懂”是指明白它怎么赚钱、风险在哪",
+      why:"巴菲特只在自己的“能力圈”里下注。诚实地圈出你真懂的，方案才好把更大的自主权，交到你有把握的地方。",
+      opts:["A 股个股","基金 / ETF","债券与固收","可转债","期权等衍生品","港股 / 美股","加密资产","说实话，都还在学"] },
+
+    temperament:{ key:"行为脾性", type:"single",
+      q:"回头看，你更像哪一种？",
+      why:"投资里最难缠的对手，常是镜中的自己。先认下自己的脾性，才好替它早早设防。",
+      opts:["手有点痒，容易追涨杀跌","看别人赚钱，会忍不住焦虑","拿得住、动得少，沉得住气","一时，也说不清"] },
+
+    basis:{ key:"决策依据", type:"single",
+      q:"做投资决定时，你主要靠什么？",
+      why:"靠什么下注，往往决定结局。依赖消息与他人推荐的人，最容易成为别人的“退出流动性”——这一问，照见你的方法是否扎实。",
+      opts:["公司基本面与财报","技术图形与走势","消息、热点与他人推荐","盘感与直觉","主要交给基金、指数，自己不挑"] },
+
+    frequency:{ key:"交易频率", type:"single",
+      q:"你更习惯频繁进出，还是长期持有？",
+      why:"交易越频繁，摩擦成本与犯错的机会越多。把你真实的节奏说出来，方案才好顺着它、或温和地纠它。",
+      opts:["常常买卖，盯盘较勤","偶尔调整","买了就长期拿着","定投为主，很少主动操作"] },
+
+    source:{ key:"信息来源", type:"single",
+      q:"平时，你的投资信息从哪儿来？",
+      why:"你喂给自己什么信息，就长出什么判断。社交平台与“内幕群”是噪音乃至陷阱的重灾区——这一问，量的是你离噪音有多近。",
+      opts:["公司公告与官方披露","专业研报与深度分析","主流财经媒体","社交平台、股吧、朋友群","基本不看，随缘"] },
+
+    market:{ key:"主要市场", type:"single",
+      q:"你主要在哪个市场里？",
+      why:"不同的市场，有不同的规矩、工具与税制——这是方案落地时的水土。",
+      opts:["A 股为主","港股","美股 / 全球","几个市场都有","还没定，想先听听"] },
+
+    active:{ key:"主动或被动", type:"single",
+      q:"你更想自己选，还是交给指数？",
+      why:"对绝大多数人，长期跑赢指数极难。坦白你的倾向——是享受亲自研究，还是更愿省心地拿住宽基——方案才好在“搏超额”与“稳稳拿住”之间，替你找准那个点。",
+      opts:["想自己选股、选基，搏一份超额","大部分被动，小部分自己玩","几乎全交给指数与基金，省心为上","还没想好"] },
+
+    leverage:{ key:"杠杆与衍生品", type:"single",
+      q:"对杠杆和衍生品，你是什么态度？",
+      why:"杠杆放大的不只是收益，更是错误——它会在最坏的时点，剥夺你“等待”的权利。这一问关乎安危，必须问清。",
+      opts:["坚决不碰","可以极少量、谨慎地用","愿意使用，也懂其中风险","不太懂，想听听利弊"] },
+
+    tradeoff:{ key:"终极取舍", type:"single",
+      q:"最后一问——你更想要哪一头？",
+      why:"这是所有取舍的源头。一头是长期可能更高的回报，代价是某些年份的剧烈起伏；另一头是夜夜安稳，代价是回报平实些。没有对错，只看你是谁。",
+      opts:["更高的长期回报，颠簸些我能忍","稳稳当当、睡得安稳最重要","希望两者兼顾，能平衡就好","说不好，想听你分析"] },
+
+    cashflow_need:{ key:"现金流时点", type:"single",
+      q:"这份现金流，是现在就要用，还是将来？",
+      why:"现在就要花，和只是“希望它生息”，指向两套配置——前者重当期分红与稳定，后者可更偏成长。",
+      opts:["现在就要用它补贴生活","几年后才用（如临近退休）","只是偏好，并不急用"] },
+
+    debt_rate:{ key:"负债利率", type:"single",
+      q:"这笔债，大致是什么利率？",
+      why:"利率高低，决定“先还债还是先投资”。年息十几个点的债，还掉它就是稳赚十几个点——多数投资给不了这么确定的回报。",
+      opts:["5% 以下","5%–10%","10%–20%","20% 以上（如部分信用卡分期）","说不太清"] },
+
+    income_forced:{ key:"被迫动用风险", type:"single",
+      q:"收入起伏时，你会被迫动用这笔投资吗？",
+      why:"若收入一断，就得卖掉投资来周转，那这笔钱就经不起套牢——这会大幅压低你真正能担的风险。",
+      opts:["不会，另有储备顶着","可能会动用一部分","很可能，它就是我的后备"] },
+
+    crypto_share:{ key:"加密占比", type:"single",
+      q:"加密资产，占你总资产多大一块？",
+      why:"加密波动极大、监管多变，且在境内交易受严格限制。占比越高，整张组合的尾部风险越被它牵动——必须看清这一块的分量。",
+      opts:["很小一点（一成以内）","约一到两成","两三成","更高，是我的大头"] },
+
+    employer_stock:{ key:"饭碗与持仓", type:"single",
+      q:"这家公司，也是你的收入来源吗？",
+      why:"若是——你的薪水和身家就系在同一家公司上。它一旦出事，你可能同时丢了工作和积蓄。这是教科书级的双重风险（想想当年的安然）。",
+      opts:["是，饭碗和身家在一处","不是，只是我持有它的股票"] },
+
+    overseas_channel:{ key:"海外渠道", type:"single",
+      q:"你是通过什么渠道投海外的？",
+      why:"渠道关乎合规与成本。境内常见的是 QDII 基金或持牌港美股券商——提示你留意渠道的合法合规与资金出入境规则。",
+      opts:["QDII 基金等境内通道","持牌的港美股券商","其他方式","还没有，正想了解"] },
+
+    leverage_level:{ key:"杠杆程度", type:"single",
+      q:"你会用到什么程度的杠杆？",
+      why:"程度决定危险系数。杠杆越高，越可能在最坏的时点被迫平仓——你能走多远，常取决于你借了多少。",
+      opts:["偶尔、小幅","经常，但控制在适度","愿意上较高杠杆"] }
+  };
+
+  /* 两种深度的流程编排：[卷名, [题目id…]] */
+  var GROUPS = {
+    simple:[
+      ["速写 · 你与这笔钱", ["goal","horizon"]],
+      ["速写 · 你的底气",   ["capital","contrib"]],
+      ["速写 · 风暴来时",   ["risk_will","risk_cap"]],
+      ["速写 · 你的全景",   ["holdings","market"]]
+    ],
+    deep:[
+      ["卷一 · 你与这笔钱",   ["goal","goal2","horizon","pockets"]],
+      ["卷二 · 财务的底盘",   ["capital","share","contrib","income","debt"]],
+      ["卷三 · 牵挂与底线",   ["family","insurance","emergency"]],
+      ["卷四 · 风暴来时：心与身", ["risk_will","risk_cap","history","max_dd","regret","expect"]],
+      ["卷五 · 你的全景与边界", ["holdings","concentration","liquidity","values","jurisdiction"]],
+      ["卷六 · 你这个人：脾性与方法", ["experience","circle","temperament","basis","frequency","source"]],
+      ["卷七 · 风格与取舍",   ["market","active","leverage","tradeoff"]]
+    ]
+  };
+  var TIER_NAME = { simple:"速写", deep:"工笔" };
+
+  var BRANCH = {
+    goal:          { opts:["创造一份额外的现金流（如分红、利息）"], ask:["cashflow_need"] },
+    debt:          { opts:["有利息不低的债（如信用卡分期、消费贷）","负债不轻，偿还已有些吃力"], ask:["debt_rate"] },
+    income:        { opts:["起伏不小（如自由职业、创业、提成制）","暂无固定收入（如退休、待业、全职投资）"], ask:["income_forced"] },
+    holdings:      { opts:["加密资产"], ask:["crypto_share"] },
+    concentration: { opts:["自家公司的股票或期权占比很高"], ask:["employer_stock"] },
+    market:        { opts:["美股 / 全球","几个市场都有"], ask:["overseas_channel"] },
+    leverage:      { opts:["愿意使用，也懂其中风险"], ask:["leverage_level"] }
+  };
+
+  function mkItem(id, ch, isFollow){
+    var d=BANK[id];
+    return { id:id, ch:ch, isFollow:!!isFollow, key:d.key, type:d.type,
+             q:d.q, why:d.why, hint:d.hint, skippable:d.skippable, opts:d.opts };
+  }
+  function triggered(id){
+    var br=BRANCH[id]; if(!br) return false;
+    var a=ans[id]; if(a==null) return false;
+    if(Array.isArray(a)) return a.some(function(v){ return br.opts.indexOf(v)>-1; });
+    return br.opts.indexOf(a)>-1;
+  }
+  function buildFlow(){
+    var f=[];
+    GROUPS[tier].forEach(function(g){
+      g[1].forEach(function(id){
+        f.push(mkItem(id, g[0], false));
+        if(tier==="deep" && triggered(id)){
+          BRANCH[id].ask.forEach(function(fid){ f.push(mkItem(fid, g[0], true)); });
+        }
+      });
+    });
+    return f;
+  }
+
+  var tier=null, flow=[], pos=0, ans={}, advanceTimer=null;
+
+  var cover=document.getElementById("cover");
+  var stage=document.getElementById("stage");
+  var chapterEl=document.getElementById("chapter");
+  var countEl=document.getElementById("count");
+  var fillEl=document.getElementById("fill");
+  var card=document.getElementById("card");
+  var backBtn=document.getElementById("backBtn");
+  var nextBtn=document.getElementById("nextBtn");
+
+  function clean(s){ return (s||"").replace(/（[^）]*）/g,"").trim(); }
+  function esc(s){ return (s||"").replace(/[&<>]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c];}); }
+
+  Array.prototype.forEach.call(document.querySelectorAll(".choice"), function(btn){
+    btn.addEventListener("click", function(){ startFlow(btn.getAttribute("data-tier")); });
+  });
+
+  function startFlow(t){
+    tier=t; ans={}; flow=buildFlow(); pos=0;
+    cover.classList.add("is-leaving");
+    setTimeout(function(){ cover.style.display="none"; stage.hidden=false; render(true); }, 460);
+  }
+
+  function showCover(){
+    stage.hidden=true; cover.style.display="";
+    cover.classList.remove("is-leaving");
+    tier=null; flow=[]; ans={}; pos=0;
+  }
+
+  function answered(i){
+    var q=flow[i], a=ans[q.id];
+    if(q.type==="multi") return q.skippable ? true : (a && a.length>0);
+    return a!=null;
+  }
+
+  function render(animate){
+    if(pos>=flow.length){ renderSummary(); return; }
+    var q=flow[pos], total=flow.length, a=ans[q.id];
+
+    chapterEl.textContent=q.ch + (q.isFollow ? " · 追问" : "");
+    countEl.textContent=String(pos+1).padStart(2,"0")+" / "+String(total).padStart(2,"0");
+    fillEl.style.width=(pos/total*100)+"%";
+
+    backBtn.hidden=false;
+    backBtn.textContent = (pos===0) ? "← 重选画法" : "← 上一步";
+
+    if(q.type==="single"){
+      nextBtn.style.display="none";
+    } else {
+      nextBtn.style.display="";
+      nextBtn.disabled=!answered(pos);
+      nextBtn.childNodes[0].nodeValue = q.skippable ? "继续（可跳过）" : "继续";
+      nextBtn.querySelector(".arr").textContent="→";
+    }
+
+    var html='<div class="q">'+esc(q.q)+'</div>';
+    if(q.hint) html+='<div class="hint">'+esc(q.hint)+'</div>';
+    html+='<div class="why">'+esc(q.why)+'</div><ul class="opts">';
+    q.opts.forEach(function(opt,idx){
+      var sel = q.type==="multi" ? (a&&a.indexOf(opt)>-1) : (a===opt);
+      html+='<li><button type="button" class="opt'+(sel?" sel":"")+'" data-opt="'+esc(opt)+'">'
+          + '<span class="opt__idx">'+(idx+1)+'</span><span class="opt__label">'+esc(opt)+'</span></button></li>';
+    });
+    html+='</ul>';
+
+    card.innerHTML=html;
+    if(animate){ card.classList.remove("turn"); void card.offsetWidth; card.classList.add("turn"); }
+    card.querySelectorAll(".opt").forEach(function(b){
+      b.addEventListener("click", function(){ pick(b.getAttribute("data-opt")); });
+    });
+  }
+
+  function pick(opt){
+    var q=flow[pos];
+    if(q.type==="multi"){
+      var arr=ans[q.id]||[]; var k=arr.indexOf(opt);
+      if(k>-1) arr.splice(k,1); else arr.push(opt);
+      ans[q.id]=arr; flow=buildFlow(); render(false); nextBtn.disabled=!answered(pos);
+    } else {
+      ans[q.id]=opt; flow=buildFlow();
+      card.querySelectorAll(".opt").forEach(function(b){
+        b.classList.toggle("sel", b.getAttribute("data-opt")===opt);
+      });
+      clearTimeout(advanceTimer);
+      advanceTimer=setTimeout(goNext,330);
+    }
+  }
+
+  function goNext(){ if(answered(pos)){ pos++; render(true); } }
+  function goBack(){
+    clearTimeout(advanceTimer);
+    if(pos===0){ showCover(); } else { pos--; render(true); }
+  }
+  nextBtn.addEventListener("click", goNext);
+  backBtn.addEventListener("click", goBack);
+
+  document.addEventListener("keydown", function(e){
+    if(stage.hidden || pos>=flow.length) return;
+    if(e.key==="ArrowLeft"){ e.preventDefault(); goBack(); return; }
+    var n=parseInt(e.key,10);
+    if(!isNaN(n)&&n>=1&&n<=9){ var q=flow[pos]; if(q.opts[n-1]) pick(q.opts[n-1]); }
+    if(e.key==="Enter" && flow[pos].type==="multi" && answered(pos)){ goNext(); }
+  });
+
+  /* ---------- 画像 ---------- */
+  function rows(){
+    return flow.map(function(q){
+      var a=ans[q.id], v;
+      if(q.type==="multi") v=(a||[]).map(clean).join("、");
+      else v=clean(a||"");
+      return [q.key, v];
+    });
+  }
+
+  function profileText(){
+    var lines=[];
+    rows().forEach(function(r){ if(r[1]) lines.push("　"+r[0]+"："+r[1]); });
+    return "【投资者画像 · "+TIER_NAME[tier]+"】\n"+lines.join("\n")+
+      "\n\n请据此为我量身一套个性化的投资策略——含资产配置、具体方向（股票、基金等）、每项的置信度，以及可证伪的退出条件。";
+  }
+
+  function renderSummary(){
+    chapterEl.textContent="终 · 画像";
+    countEl.textContent="";
+    fillEl.style.width="100%";
+    backBtn.hidden=false; backBtn.textContent="← 上一步";
+    nextBtn.style.display="none";
+
+    card.innerHTML=
+      '<div class="sum__title">这就是你的画像</div>'
+    + '<div class="sum__lede"><b>复制下面这段，粘回对话框</b>——我便照着这个人，为你裁方案（含股票、基金等方向、每项置信度，与该退出的信号）。</div>'
+    + '<div class="copy-card">'
+    +   '<div class="profile-box" id="profileBox" tabindex="0">'+esc(profileText())+'</div>'
+    +   '<div class="actions"><button class="copy" id="copyBtn">一键复制</button>'
+    +     '<span class="copy-hint" id="copyHint">点框内即可全选，再按 Ctrl / ⌘ + C</span></div>'
+    + '</div>'
+    + '<div class="restart-row"><button class="restart" id="restartBtn">换一种画法</button>'
+    +   '<span class="foot-inline">仅供自我梳理 · 非持牌建议 · AI 或有误 · 决定权在你</span></div>';
+
+    card.classList.remove("turn"); void card.offsetWidth; card.classList.add("turn");
+
+    var box=document.getElementById("profileBox");
+    box.addEventListener("click", function(){ selectBox(box); });
+    document.getElementById("copyBtn").addEventListener("click", function(){ copyProfile(box); });
+    document.getElementById("restartBtn").addEventListener("click", showCover);
+  }
+
+  function selectBox(box){
+    var r=document.createRange(); r.selectNodeContents(box);
+    var s=window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+
+  function copyProfile(box){
+    var txt=profileText();
+    var btn=document.getElementById("copyBtn");
+    var hint=document.getElementById("copyHint");
+    var ok=function(){ btn.textContent="已复制 ✓"; hint.textContent="粘回对话框即可";
+      setTimeout(function(){ btn.textContent="一键复制"; }, 2400); };
+    var manual=function(){ selectBox(box); btn.textContent="已为你选中";
+      hint.textContent="请按 Ctrl / ⌘ + C 复制"; setTimeout(function(){ btn.textContent="一键复制"; }, 2600); };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(ok, function(){ legacy(txt,ok,manual); });
+    } else { legacy(txt,ok,manual); }
+  }
+
+  function legacy(txt, ok, manual){
+    try{
+      var ta=document.createElement("textarea");
+      ta.value=txt; ta.style.position="fixed"; ta.style.top="-9999px";
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      var done=document.execCommand("copy"); document.body.removeChild(ta);
+      done?ok():manual();
+    }catch(e){ manual(); }
+  }
+
+})();
+</script>
+</body>
+</html>
