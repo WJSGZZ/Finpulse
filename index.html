@@ -91,7 +91,12 @@
     font-size:clamp(1.5rem,4.4vw,1.98rem); line-height:1.44; letter-spacing:.01em;}
   .why{font-family:var(--serif); color:var(--muted);
     font-size:1rem; line-height:1.88; margin-top:1rem; max-width:33rem;}
-  .hint{font-size:.75rem; letter-spacing:.1em; color:var(--gold); margin-top:.85rem}
+  .pills{margin-top:.9rem; display:flex; gap:.5rem; flex-wrap:wrap; align-items:center}
+  .pill{font-size:.7rem; letter-spacing:.08em; color:var(--gold); white-space:nowrap;
+    padding:.24rem .65rem; background:var(--gold-soft); border:1px solid rgba(162,121,59,.3); border-radius:999px}
+  .pill--follow{display:inline-flex; align-items:center; gap:.4em; letter-spacing:.05em; border-color:rgba(162,121,59,.5)}
+  .pill--follow::before{content:""; width:5px; height:5px; border-radius:50%; background:var(--gold); flex:0 0 auto}
+  .qnote{margin-top:.7rem; font-size:.82rem; line-height:1.65; color:var(--muted)}
 
   .opts{margin-top:2rem; list-style:none}
   .opt{display:flex; align-items:flex-start; gap:.95rem; width:100%; text-align:left;
@@ -159,6 +164,11 @@
   .sum__lede b{color:var(--gold); font-weight:600}
   .restart-row{margin-top:1.2rem; display:flex; align-items:center; gap:.9rem; flex-wrap:wrap}
   .foot-inline{font-size:.72rem; color:#9A9D94; letter-spacing:.02em}
+  .resume{margin-top:.7rem; display:flex; align-items:center; min-height:1.15rem; font-size:.75rem; color:var(--muted); letter-spacing:.02em}
+  .resume__btn{appearance:none; border:0; background:transparent; color:var(--gold); cursor:pointer;
+    font-size:.75rem; letter-spacing:.04em; text-decoration:underline; text-underline-offset:3px;
+    text-decoration-color:rgba(162,121,59,.4); padding:.1rem .3rem; margin-left:auto}
+  .resume__btn:hover{text-decoration-color:var(--gold)}
 
   @media (max-height:680px){
     .body{padding:.9rem 0}
@@ -226,6 +236,7 @@
         <div class="count" id="count"></div>
       </div>
       <div class="track"><div class="track__fill" id="fill"></div></div>
+      <div class="resume" id="resume"><span class="resume__txt" id="resumeTxt" hidden>已恢复上次进度</span><button class="resume__btn" id="resumeRestart" type="button" data-armed="0">重新开始</button></div>
     </div>
     <div class="body"><div class="card" id="card"></div></div>
     <nav class="nav">
@@ -247,7 +258,6 @@
 
     goal2:{ key:"其他心愿", type:"multi", skippable:true,
       q:"除了这一桩，还有别的心愿吗？",
-      hint:"可多选，也可以跳过",
       why:"人很少只为一件事理财。把心底那些次要却真实的愿望也摆出来，方案才不会顾此失彼。",
       opts:["给孩子留一笔","提前退休的自由","换一套更好的房子","一次说走就走的底气","应对未知的医疗或变故","传承给下一代","暂时没有别的"] },
 
@@ -333,9 +343,8 @@
 
     holdings:{ key:"现有资产", type:"multi",
       q:"此刻，你的钱大致安放在哪些地方？",
-      hint:"可多选",
       why:"新的一步，要放进你财务的整张版图里看——已在某处压了重注，便该在别处求一份分散。",
-      opts:["现金与存款","货币基金、银行理财","股票","基金 / ETF","债券","房产","黄金或大宗","加密资产","几乎还没有积蓄"] },
+      opts:["现金与存款","货币基金、银行理财","股票","基金 / ETF","债券","储蓄型保险、年金（如增额寿、养老年金）","房产","黄金或大宗","加密资产","几乎还没有积蓄"] },
 
     concentration:{ key:"集中持仓", type:"single",
       q:"有没有哪一样，占得特别重？",
@@ -349,7 +358,6 @@
 
     values:{ key:"约束与偏好", type:"multi",
       q:"有没有你不愿碰的，或格外在意的？",
-      hint:"可多选",
       why:"方案是为你而做，不是为“最优解”而做。你的底线与偏好，本就该被尊重。",
       opts:["不碰加密资产","看重环境与社会责任","有特定的行业或信仰忌讳","只想守在我熟悉的少数领域","偏好能定期分红、派息的资产","没有特别的限制"] },
 
@@ -365,7 +373,7 @@
 
     circle:{ key:"能力圈", type:"multi",
       q:"这些里头，你真正算得上懂的有哪些？",
-      hint:"可多选。“懂”是指明白它怎么赚钱、风险在哪",
+      hint:"“懂”是指明白它怎么赚钱、风险在哪",
       why:"巴菲特只在自己的“能力圈”里下注。诚实地圈出你真懂的，方案才好把更大的自主权，交到你有把握的地方。",
       opts:["A 股个股","基金 / ETF","债券与固收","可转债","期权等衍生品","港股 / 美股","加密资产","说实话，都还在学"] },
 
@@ -376,12 +384,12 @@
 
     basis:{ key:"决策依据", type:"single",
       q:"做投资决定时，你主要靠什么？",
-      why:"靠什么下注，往往决定结局。依赖消息与他人推荐的人，最容易成为别人的“退出流动性”——这一问，照见你的方法是否扎实。",
+      why:"靠什么下注，往往决定结局。只跟着消息和别人推荐走的人，最容易在高位接盘、替别人买单——这一问，照见你的方法扎不扎实。",
       opts:["公司基本面与财报","技术图形与走势","消息、热点与他人推荐","盘感与直觉","主要交给基金、指数，自己不挑"] },
 
     frequency:{ key:"交易频率", type:"single",
       q:"你更习惯频繁进出，还是长期持有？",
-      why:"交易越频繁，摩擦成本与犯错的机会越多。把你真实的节奏说出来，方案才好顺着它、或温和地纠它。",
+      why:"买卖越频繁，手续费和犯错的机会就越多。把你真实的节奏说出来，方案才好顺着它、或温和地纠它。",
       opts:["常常买卖，盯盘较勤","偶尔调整","买了就长期拿着","定投为主，很少主动操作"] },
 
     source:{ key:"信息来源", type:"single",
@@ -396,8 +404,8 @@
 
     active:{ key:"主动或被动", type:"single",
       q:"你更想自己选，还是交给指数？",
-      why:"对绝大多数人，长期跑赢指数极难。坦白你的倾向——是享受亲自研究，还是更愿省心地拿住宽基——方案才好在“搏超额”与“稳稳拿住”之间，替你找准那个点。",
-      opts:["想自己选股、选基，搏一份超额","大部分被动，小部分自己玩","几乎全交给指数与基金，省心为上","还没想好"] },
+      why:"对绝大多数人，长期跑赢大盘极难。坦白你的倾向——是爱自己挑，还是更愿省心地拿住一只大盘指数基金——方案才好在“自己搏一搏”与“稳稳拿住”之间，替你找准那个点。",
+      opts:["想自己挑股票、基金，搏一份更高收益","大半交给指数省心，小半自己挑","几乎全交给指数与基金，省心为上","还没想好"] },
 
     leverage:{ key:"杠杆与衍生品", type:"single",
       q:"对杠杆和衍生品，你是什么态度？",
@@ -426,12 +434,12 @@
 
     crypto_share:{ key:"加密占比", type:"single",
       q:"加密资产，占你总资产多大一块？",
-      why:"加密波动极大、监管多变，且在境内交易受严格限制。占比越高，整张组合的尾部风险越被它牵动——必须看清这一块的分量。",
+      why:"加密波动极大、监管多变，且在境内交易受严格限制。它占你越多，万一暴跌，伤到的就越是你的全局——必须先看清这一块的分量。",
       opts:["很小一点（一成以内）","约一到两成","两三成","更高，是我的大头"] },
 
     employer_stock:{ key:"饭碗与持仓", type:"single",
       q:"这家公司，也是你的收入来源吗？",
-      why:"若是——你的薪水和身家就系在同一家公司上。它一旦出事，你可能同时丢了工作和积蓄。这是教科书级的双重风险（想想当年的安然）。",
+      why:"若是——你的薪水和身家就系在同一家公司上。它一旦出事，你可能同时丢了工作和积蓄。这是最该避开的双重风险（历史上不乏这样的例子）。",
       opts:["是，饭碗和身家在一处","不是，只是我持有它的股票"] },
 
     overseas_channel:{ key:"海外渠道", type:"single",
@@ -442,7 +450,37 @@
     leverage_level:{ key:"杠杆程度", type:"single",
       q:"你会用到什么程度的杠杆？",
       why:"程度决定危险系数。杠杆越高，越可能在最坏的时点被迫平仓——你能走多远，常取决于你借了多少。",
-      opts:["偶尔、小幅","经常，但控制在适度","愿意上较高杠杆"] }
+      opts:["偶尔、小幅","经常，但控制在适度","愿意上较高杠杆"] },
+
+    withdraw_when:{ key:"取用节奏", type:"single",
+      q:"你大概什么时候开始取、取得勤不勤？",
+      why:"正在取钱的人，最怕“开头几年就遇上大跌、又同时在取”——本金会被双重消耗。越临近取用，越要把波动压下来、备足缓冲。",
+      opts:["已经在定期取了","几年后才开始","偶尔大额取一笔","还没定"] },
+
+    short_money_when:{ key:"短钱时点", type:"single",
+      q:"那笔近期要用的钱，大概多久内要动？",
+      why:"短期要用的钱，得先从这笔投资里“划出来”、放进几乎不波动的地方，不能让它去冒险。多久要用，决定划出多少。",
+      opts:["一年以内","一到两年","两三年内","还不确定"] },
+
+    expect_check:{ key:"高收益的代价", type:"single",
+      q:"为搏这样的高回报，你受得了它中途腰斩吗？",
+      why:"高回报和大波动是一对拆不开的孪生兄弟。想要翻倍的潜力，通常就得忍受腰斩的可能——先掂掂这个代价，接不接得住。",
+      opts:["能，我扛得住","不能，那我得重新想想","没想过，想听你分析"] },
+
+    risk_protect:{ key:"保本优先", type:"single",
+      q:"既然这是赔不起的钱，你更想——",
+      why:"真正输不起的钱，第一要务往往是“别亏”，而不是“多赚”。先定下这个基调，方案才不会让你担不该担的险。",
+      opts:["优先保本，稳稳的就好","在保本前提下，稳中求进","还想搏一点，但心里没底"] },
+
+    legacy_style:{ key:"传承打法", type:"single",
+      q:"这笔想留给后代的钱，你更希望它——",
+      why:"要传给下一代的钱，期限常常很长、甚至跨代。求稳地保值，还是长期增值给后代留更多，决定了它该怎么投。",
+      opts:["稳健保值，安稳传下去","长期增值，给后代留更多","还没想好"] },
+
+    horizon_firm:{ key:"期限的弹性", type:"single",
+      q:"这个期限，是定死的，还是大致估的？",
+      why:"越是“到点必须用”的短钱，越不能去冒险，得稳稳放在几乎不波动的地方；若只是大致估、能往后拖，才经得起一点波动去搏增值。",
+      opts:["定死的，到点必须用","大致如此，能稍作伸缩","只是估计，不急用"] }
   };
 
   /* 两种深度的流程编排：[卷名, [题目id…]] */
@@ -472,7 +510,13 @@
     holdings:      { opts:["加密资产"], ask:["crypto_share"] },
     concentration: { opts:["自家公司的股票或期权占比很高"], ask:["employer_stock"] },
     market:        { opts:["美股 / 全球","几个市场都有"], ask:["overseas_channel"] },
-    leverage:      { opts:["愿意使用，也懂其中风险"], ask:["leverage_level"] }
+    leverage:      { opts:["愿意使用，也懂其中风险"], ask:["leverage_level"] },
+    contrib:       { opts:["相反，我可能要陆续取用一部分"], ask:["withdraw_when"] },
+    pockets:       { opts:["大部分是长钱，但有一小块近期要用","掺得比较杂，几笔不同期限混在一起"], ask:["short_money_when"] },
+    expect:        { opts:["越多越好，翻倍也不嫌多"], ask:["expect_check"] },
+    risk_cap:      { opts:["会动摇我的根本，那是我赔不起的钱"], ask:["risk_protect"] },
+    goal2:         { opts:["传承给下一代"], ask:["legacy_style"] },
+    horizon:       { opts:["一年以内","一到三年"], ask:["horizon_firm"] }
   };
 
   function mkItem(id, ch, isFollow){
@@ -501,6 +545,15 @@
 
   var tier=null, flow=[], pos=0, ans={}, advanceTimer=null;
 
+  var LS=null;
+  try{ var __t="__fp_t"; window.localStorage.setItem(__t,"1"); window.localStorage.removeItem(__t); LS=window.localStorage; }catch(e){ LS=null; }
+  var STORE_KEY="finpulse-profile-v2";
+  var store={
+    save:function(){ if(!LS) return; try{ LS.setItem(STORE_KEY, JSON.stringify({tier:tier,pos:pos,ans:ans})); }catch(e){} },
+    load:function(){ if(!LS) return null; try{ var r=LS.getItem(STORE_KEY); return r?JSON.parse(r):null; }catch(e){ return null; } },
+    clear:function(){ if(!LS) return; try{ LS.removeItem(STORE_KEY); }catch(e){} }
+  };
+
   var cover=document.getElementById("cover");
   var stage=document.getElementById("stage");
   var chapterEl=document.getElementById("chapter");
@@ -509,6 +562,8 @@
   var card=document.getElementById("card");
   var backBtn=document.getElementById("backBtn");
   var nextBtn=document.getElementById("nextBtn");
+  var resumeEl=document.getElementById("resume");
+  var resumeTxtEl=document.getElementById("resumeTxt");
 
   function clean(s){ return (s||"").replace(/（[^）]*）/g,"").trim(); }
   function esc(s){ return (s||"").replace(/[&<>]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c];}); }
@@ -518,7 +573,7 @@
   });
 
   function startFlow(t){
-    tier=t; ans={}; flow=buildFlow(); pos=0;
+    tier=t; flow=buildFlow(); pos=0; store.save();
     cover.classList.add("is-leaving");
     setTimeout(function(){ cover.style.display="none"; stage.hidden=false; render(true); }, 460);
   }
@@ -526,7 +581,15 @@
   function showCover(){
     stage.hidden=true; cover.style.display="";
     cover.classList.remove("is-leaving");
-    tier=null; flow=[]; ans={}; pos=0;
+    tier=null; flow=[]; pos=0; store.save();
+  }
+
+  function hideResume(){ if(resumeTxtEl) resumeTxtEl.hidden=true; }
+  function resetAll(){ ans={}; hideResume(); showCover(); store.clear(); }
+  function armConfirm(btn, label, action){
+    if(btn.getAttribute("data-armed")==="1"){ action(); return; }
+    var orig=btn.textContent; btn.textContent=label; btn.setAttribute("data-armed","1");
+    setTimeout(function(){ if(btn.getAttribute("data-armed")==="1"){ btn.setAttribute("data-armed","0"); btn.textContent=orig; } }, 2800);
   }
 
   function answered(i){
@@ -536,10 +599,11 @@
   }
 
   function render(animate){
+    store.save();
     if(pos>=flow.length){ renderSummary(); return; }
     var q=flow[pos], total=flow.length, a=ans[q.id];
 
-    chapterEl.textContent=q.ch + (q.isFollow ? " · 追问" : "");
+    chapterEl.textContent=q.ch;
     countEl.textContent=String(pos+1).padStart(2,"0")+" / "+String(total).padStart(2,"0");
     fillEl.style.width=(pos/total*100)+"%";
 
@@ -547,16 +611,22 @@
     backBtn.textContent = (pos===0) ? "← 重选画法" : "← 上一步";
 
     if(q.type==="single"){
-      nextBtn.style.display="none";
+      nextBtn.style.visibility="hidden";
+      nextBtn.disabled=true;
     } else {
-      nextBtn.style.display="";
+      nextBtn.style.visibility="visible";
       nextBtn.disabled=!answered(pos);
       nextBtn.childNodes[0].nodeValue = "继续";
       nextBtn.querySelector(".arr").textContent="→";
     }
 
     var html='<div class="q">'+esc(q.q)+'</div>';
-    if(q.hint) html+='<div class="hint">'+esc(q.hint)+'</div>';
+    var pills='';
+    if(q.isFollow) pills+='<span class="pill pill--follow">追问</span>';
+    pills+='<span class="pill">'+(q.type==="multi"?"多选":"单选")+'</span>';
+    if(q.skippable) pills+='<span class="pill">可跳过</span>';
+    html+='<div class="pills">'+pills+'</div>';
+    if(q.hint) html+='<div class="qnote">'+esc(q.hint)+'</div>';
     html+='<div class="why">'+esc(q.why)+'</div><ul class="opts">';
     q.opts.forEach(function(opt,idx){
       var sel = q.type==="multi" ? (a&&a.indexOf(opt)>-1) : (a===opt);
@@ -573,6 +643,7 @@
   }
 
   function pick(opt){
+    hideResume();
     var q=flow[pos];
     if(q.type==="multi"){
       var arr=ans[q.id]||[]; var k=arr.indexOf(opt);
@@ -588,8 +659,9 @@
     }
   }
 
-  function goNext(){ if(answered(pos)){ pos++; render(true); } }
+  function goNext(){ hideResume(); if(answered(pos)){ pos++; render(true); } }
   function goBack(){
+    hideResume();
     clearTimeout(advanceTimer);
     if(pos===0){ showCover(); } else { pos--; render(true); }
   }
@@ -617,8 +689,7 @@
   function profileText(){
     var lines=[];
     rows().forEach(function(r){ if(r[1]) lines.push("　"+r[0]+"："+r[1]); });
-    return "【投资者画像 · "+TIER_NAME[tier]+"】\n"+lines.join("\n")+
-      "\n\n请据此为我量身一套个性化的投资策略——含资产配置、具体方向（股票、基金等）、每项的置信度，以及可证伪的退出条件。";
+    return "【投资者画像 · "+TIER_NAME[tier]+"】\n"+lines.join("\n");
   }
 
   function renderSummary(){
@@ -626,25 +697,23 @@
     countEl.textContent="";
     fillEl.style.width="100%";
     backBtn.hidden=false; backBtn.textContent="← 上一步";
-    nextBtn.style.display="none";
+    nextBtn.style.visibility="hidden"; nextBtn.disabled=true;
 
     card.innerHTML=
       '<div class="sum__title">这就是你的画像</div>'
-    + '<div class="sum__lede"><b>复制下面这段，粘回对话框</b>——我便照着这个人，为你裁方案（含股票、基金等方向、每项置信度，与该退出的信号）。</div>'
+    + '<div class="sum__lede"><b>复制下面这段，粘回对话框</b>——接下来想做什么，由你来说。</div>'
     + '<div class="copy-card">'
     +   '<div class="profile-box" id="profileBox" tabindex="0">'+esc(profileText())+'</div>'
     +   '<div class="actions"><button class="copy" id="copyBtn">一键复制</button>'
     +     '<span class="copy-hint" id="copyHint">点框内即可全选，再按 Ctrl / ⌘ + C</span></div>'
     + '</div>'
-    + '<div class="restart-row"><button class="restart" id="restartBtn">换一种画法</button>'
-    +   '<span class="foot-inline">仅供自我梳理 · 非持牌建议 · AI 或有误 · 决定权在你</span></div>';
+    + '<div class="restart-row"><span class="foot-inline">仅供自我梳理 · 非持牌建议 · AI 或有误 · 决定权在你</span></div>';
 
     card.classList.remove("turn"); void card.offsetWidth; card.classList.add("turn");
 
     var box=document.getElementById("profileBox");
     box.addEventListener("click", function(){ selectBox(box); });
     document.getElementById("copyBtn").addEventListener("click", function(){ copyProfile(box); });
-    document.getElementById("restartBtn").addEventListener("click", showCover);
   }
 
   function selectBox(box){
@@ -674,6 +743,21 @@
       done?ok():manual();
     }catch(e){ manual(); }
   }
+
+  var resumeRestart=document.getElementById("resumeRestart");
+  if(resumeRestart) resumeRestart.addEventListener("click", function(){ armConfirm(resumeRestart, "确定？再点一次清空", resetAll); });
+
+  (function restore(){
+    var saved=store.load();
+    if(!saved) return;
+    ans=saved.ans||{};
+    if(saved.tier){
+      tier=saved.tier; flow=buildFlow();
+      pos=Math.max(0, Math.min(saved.pos||0, flow.length));
+      cover.style.display="none"; stage.hidden=false; render(true);
+      if(resumeTxtEl && (pos>0 || Object.keys(ans).length>0)) resumeTxtEl.hidden=false;
+    }
+  })();
 
 })();
 </script>
