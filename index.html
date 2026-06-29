@@ -97,6 +97,12 @@
   .pill--follow{display:inline-flex; align-items:center; gap:.4em; letter-spacing:.05em; border-color:rgba(162,121,59,.5)}
   .pill--follow::before{content:""; width:5px; height:5px; border-radius:50%; background:var(--gold); flex:0 0 auto}
   .qnote{margin-top:.7rem; font-size:.82rem; line-height:1.65; color:var(--muted)}
+  .other-fill{display:block; width:100%; box-sizing:border-box; margin-top:.75rem;
+    background:var(--paper); border:1px solid var(--line); border-radius:8px;
+    padding:.7rem .9rem; font-family:var(--sans); font-size:.95rem; color:var(--text);
+    outline:none; transition:border-color .2s}
+  .other-fill:focus{border-color:var(--gold)}
+  .other-fill::placeholder{color:var(--muted)}
 
   .opts{margin-top:2rem; list-style:none}
   .opt{display:flex; align-items:flex-start; gap:.95rem; width:100%; text-align:left;
@@ -112,6 +118,45 @@
   .opt.sel{color:#1c2220}
   .opt.sel .opt__idx{color:var(--gold)}
   .opt.sel .opt__label{box-shadow:inset 0 -.55em 0 rgba(162,121,59,.13)}
+
+  /* 自动适配：内容超出一屏时逐级压缩，确保不滚动 */
+  .body.fit-1 .opts{margin-top:1.05rem}
+  .body.fit-1 .opt{padding:.6rem .2rem}
+  .body.fit-1 .why{margin-top:.7rem; line-height:1.68}
+  .body.fit-1 .other-fill{margin-top:.5rem}
+  .body.fit-2{padding:.75rem 0}
+  .body.fit-2 .opts{margin-top:.65rem}
+  .body.fit-2 .opt{padding:.46rem .2rem; font-size:.99rem; line-height:1.4}
+  .body.fit-2 .why{font-size:.9rem; line-height:1.55; margin-top:.5rem}
+  .body.fit-2 .q{line-height:1.3}
+  .body.fit-2 .pills{margin-top:.55rem}
+  .body.fit-2 .other-fill{padding:.55rem .75rem; margin-top:.45rem}
+  .body.fit-3{padding:.4rem 0}
+  .body.fit-3 .opts{margin-top:.45rem}
+  .body.fit-3 .opt{padding:.32rem .2rem; font-size:.93rem; line-height:1.32}
+  .body.fit-3 .why{font-size:.82rem; line-height:1.42; margin-top:.35rem}
+  .body.fit-3 .q{font-size:clamp(1.2rem,3.6vw,1.5rem); line-height:1.26}
+  .body.fit-3 .qnote{margin-top:.4rem}
+  .body.fit-3 .pills{margin-top:.4rem}
+  .body.fit-3 .other-fill{padding:.45rem .65rem; margin-top:.4rem}
+
+  .cover.cfit-1 .cover__title{font-size:clamp(2.1rem,7vw,3rem)}
+  .cover.cfit-1 .cover__eyebrow{margin-bottom:1rem}
+  .cover.cfit-1 .cover__rule{margin:.9rem 0 1.05rem}
+  .cover.cfit-1 .cover__lede p{font-size:.94rem; line-height:1.68}
+  .cover.cfit-1 .cover__meta{margin:.9rem 0 1.05rem}
+  .cover.cfit-1 .choice{padding:1rem 1.2rem 1.05rem}
+  .cover.cfit-1 .choice__desc{font-size:.9rem; line-height:1.6}
+  .cover.cfit-1 .choice__meta{margin:.55rem 0 .6rem}
+  .cover.cfit-2 .cover__title{font-size:clamp(1.8rem,6vw,2.35rem)}
+  .cover.cfit-2 .cover__eyebrow{margin-bottom:.7rem}
+  .cover.cfit-2 .cover__rule{margin:.65rem 0 .8rem}
+  .cover.cfit-2 .cover__lede p{font-size:.85rem; line-height:1.5}
+  .cover.cfit-2 .cover__meta{margin:.65rem 0 .8rem}
+  .cover.cfit-2 .choice{padding:.72rem 1rem .78rem}
+  .cover.cfit-2 .choice__name{font-size:1.28rem}
+  .cover.cfit-2 .choice__desc{font-size:.8rem; line-height:1.45}
+  .cover.cfit-2 .choice__meta{margin:.4rem 0 .48rem}
 
   .nav{flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding-top:.4rem}
   .back{appearance:none; border:0; background:transparent; color:var(--muted);
@@ -256,10 +301,10 @@
       why:"钱有了去处，心里才有了标尺。守住养老的底气，与放手追一场自由，要的是两套全然不同的章法。",
       opts:["安放养老，攒一份退休后的从容","攒一笔确定的大额支出（购房、教育……）","长期增值，去够一够财务的自由","跑赢通胀，别让积蓄悄悄缩水","创造一份额外的现金流（如分红、利息）","还没太想清，先别让钱闲着"] },
 
-    goal2:{ key:"其他心愿", type:"multi", skippable:true,
+    goal2:{ key:"其他心愿", type:"multi", skippable:true, other:true,
       q:"除了这一桩，还有别的心愿吗？",
       why:"人很少只为一件事理财。把心底那些次要却真实的愿望也摆出来，方案才不会顾此失彼。",
-      opts:["给孩子留一笔","提前退休的自由","换一套更好的房子","一次说走就走的底气","应对未知的医疗或变故","传承给下一代","暂时没有别的"] },
+      opts:["给孩子留一笔","提前退休的自由","换一套更好的房子","应对未知的医疗或变故","传承给下一代","暂时没有别的"] },
 
     horizon:{ key:"投资期限", type:"single",
       q:"多久之内，你不会动它？",
@@ -341,7 +386,7 @@
       why:"这一问，是给期待照个镜子。若想要的回报远高于愿担的风险，那中间的缺口，迟早要用失望或冒险来填——早点看见它，是好事。",
       opts:["跑赢存款和通胀就好（约 3–5%）","稳健增值（约 6–10%）","明显跑赢大盘（约 10–20%）","越多越好，翻倍也不嫌多","没具体想过"] },
 
-    holdings:{ key:"现有资产", type:"multi",
+    holdings:{ key:"现有资产", type:"multi", other:true,
       q:"此刻，你的钱大致安放在哪些地方？",
       why:"新的一步，要放进你财务的整张版图里看——已在某处压了重注，便该在别处求一份分散。",
       opts:["现金与存款","货币基金、银行理财","股票","基金 / ETF","债券","储蓄型保险、年金（如增额寿、养老年金）","房产","黄金或大宗","加密资产","几乎还没有积蓄"] },
@@ -356,10 +401,10 @@
       why:"要随时取用的钱，不能锁进会起落的资产里——这决定了多少钱，必须留在能立刻变现的地方。",
       opts:["有，得随时能动用一部分","可能有，还不确定","没有特别的打算"] },
 
-    values:{ key:"约束与偏好", type:"multi",
+    values:{ key:"约束与偏好", type:"multi", other:true,
       q:"有没有你不愿碰的，或格外在意的？",
       why:"方案是为你而做，不是为“最优解”而做。你的底线与偏好，本就该被尊重。",
-      opts:["不碰加密资产","看重环境与社会责任","有特定的行业或信仰忌讳","只想守在我熟悉的少数领域","偏好能定期分红、派息的资产","没有特别的限制"] },
+      opts:["不碰加密资产","看重环境与社会责任","只想守在我熟悉的少数领域","偏好能定期分红、派息的资产","没有特别的限制"] },
 
     jurisdiction:{ key:"身份与辖区", type:"single",
       q:"税务上，你大致是什么身份？",
@@ -371,11 +416,11 @@
       why:"完整地走过一轮牛熊、真切痛过一回的人，对风险的体会，和纸上谈兵者截然不同。",
       opts:["才刚起步","一两年，浅尝过","有几年了，见过些涨跌","资深，穿过完整的牛市与熊市"] },
 
-    circle:{ key:"能力圈", type:"multi",
+    circle:{ key:"能力圈", type:"multi", other:true,
       q:"这些里头，你真正算得上懂的有哪些？",
       hint:"“懂”是指明白它怎么赚钱、风险在哪",
       why:"巴菲特只在自己的“能力圈”里下注。诚实地圈出你真懂的，方案才好把更大的自主权，交到你有把握的地方。",
-      opts:["A 股个股","基金 / ETF","债券与固收","可转债","期权等衍生品","港股 / 美股","加密资产","说实话，都还在学"] },
+      opts:["A 股个股","基金 / ETF","债券与固收","港股 / 美股","加密资产","说实话，都还在学"] },
 
     temperament:{ key:"行为脾性", type:"single",
       q:"回头看，你更像哪一种？",
@@ -442,11 +487,6 @@
       why:"若是——你的薪水和身家就系在同一家公司上。它一旦出事，你可能同时丢了工作和积蓄。这是最该避开的双重风险（历史上不乏这样的例子）。",
       opts:["是，饭碗和身家在一处","不是，只是我持有它的股票"] },
 
-    overseas_channel:{ key:"海外渠道", type:"single",
-      q:"你是通过什么渠道投海外的？",
-      why:"渠道关乎合规与成本。境内常见的是 QDII 基金或持牌港美股券商——提示你留意渠道的合法合规与资金出入境规则。",
-      opts:["QDII 基金等境内通道","持牌的港美股券商","其他方式","还没有，正想了解"] },
-
     leverage_level:{ key:"杠杆程度", type:"single",
       q:"你会用到什么程度的杠杆？",
       why:"程度决定危险系数。杠杆越高，越可能在最坏的时点被迫平仓——你能走多远，常取决于你借了多少。",
@@ -509,7 +549,6 @@
     income:        { opts:["起伏不小（如自由职业、创业、提成制）","暂无固定收入（如退休、待业、全职投资）"], ask:["income_forced"] },
     holdings:      { opts:["加密资产"], ask:["crypto_share"] },
     concentration: { opts:["自家公司的股票或期权占比很高"], ask:["employer_stock"] },
-    market:        { opts:["美股 / 全球","几个市场都有"], ask:["overseas_channel"] },
     leverage:      { opts:["愿意使用，也懂其中风险"], ask:["leverage_level"] },
     contrib:       { opts:["相反，我可能要陆续取用一部分"], ask:["withdraw_when"] },
     pockets:       { opts:["大部分是长钱，但有一小块近期要用","掺得比较杂，几笔不同期限混在一起"], ask:["short_money_when"] },
@@ -543,13 +582,13 @@
     return f;
   }
 
-  var tier=null, flow=[], pos=0, ans={}, advanceTimer=null;
+  var tier=null, flow=[], pos=0, ans={}, otherText={}, advanceTimer=null;
 
   var LS=null;
   try{ var __t="__fp_t"; window.localStorage.setItem(__t,"1"); window.localStorage.removeItem(__t); LS=window.localStorage; }catch(e){ LS=null; }
   var STORE_KEY="finpulse-profile-v2";
   var store={
-    save:function(){ if(!LS) return; try{ LS.setItem(STORE_KEY, JSON.stringify({tier:tier,pos:pos,ans:ans})); }catch(e){} },
+    save:function(){ if(!LS) return; try{ LS.setItem(STORE_KEY, JSON.stringify({tier:tier,pos:pos,ans:ans,otherText:otherText})); }catch(e){} },
     load:function(){ if(!LS) return null; try{ var r=LS.getItem(STORE_KEY); return r?JSON.parse(r):null; }catch(e){ return null; } },
     clear:function(){ if(!LS) return; try{ LS.removeItem(STORE_KEY); }catch(e){} }
   };
@@ -564,6 +603,7 @@
   var nextBtn=document.getElementById("nextBtn");
   var resumeEl=document.getElementById("resume");
   var resumeTxtEl=document.getElementById("resumeTxt");
+  var bodyEl=document.querySelector(".body");
 
   function clean(s){ return (s||"").replace(/（[^）]*）/g,"").trim(); }
   function esc(s){ return (s||"").replace(/[&<>]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c];}); }
@@ -582,20 +622,41 @@
     stage.hidden=true; cover.style.display="";
     cover.classList.remove("is-leaving");
     tier=null; flow=[]; pos=0; store.save();
+    coverFit();
   }
 
   function hideResume(){ if(resumeTxtEl) resumeTxtEl.hidden=true; }
-  function resetAll(){ ans={}; hideResume(); showCover(); store.clear(); }
+  function resetAll(){ ans={}; otherText={}; hideResume(); showCover(); store.clear(); }
+  function disarm(btn){
+    if(btn._armTimer){ clearTimeout(btn._armTimer); btn._armTimer=null; }
+    var o=btn.getAttribute("data-orig");
+    if(o!=null){ btn.textContent=o; btn.removeAttribute("data-orig"); }
+    btn.setAttribute("data-armed","0");
+  }
   function armConfirm(btn, label, action){
-    if(btn.getAttribute("data-armed")==="1"){ action(); return; }
-    var orig=btn.textContent; btn.textContent=label; btn.setAttribute("data-armed","1");
-    setTimeout(function(){ if(btn.getAttribute("data-armed")==="1"){ btn.setAttribute("data-armed","0"); btn.textContent=orig; } }, 2800);
+    if(btn.getAttribute("data-armed")==="1"){ disarm(btn); action(); return; }
+    btn.setAttribute("data-orig", btn.textContent);
+    btn.textContent=label; btn.setAttribute("data-armed","1");
+    btn._armTimer=setTimeout(function(){ disarm(btn); }, 2800);
   }
 
   function answered(i){
     var q=flow[i], a=ans[q.id];
     if(q.type==="multi") return q.skippable ? true : (a && a.length>0);
     return a!=null;
+  }
+
+  function fitToViewport(){
+    if(!bodyEl || stage.hidden) return;
+    bodyEl.classList.remove("fit-1","fit-2","fit-3");
+    var t=["fit-1","fit-2","fit-3"];
+    for(var i=0;i<t.length && bodyEl.scrollHeight > bodyEl.clientHeight+1;i++){ bodyEl.classList.add(t[i]); }
+  }
+  function coverFit(){
+    if(cover.style.display==="none") return;
+    cover.classList.remove("cfit-1","cfit-2");
+    var t=["cfit-1","cfit-2"];
+    for(var i=0;i<t.length && cover.scrollHeight > cover.clientHeight+1;i++){ cover.classList.add(t[i]); }
   }
 
   function render(animate){
@@ -633,13 +694,24 @@
       html+='<li><button type="button" class="opt'+(sel?" sel":"")+'" data-opt="'+esc(opt)+'">'
           + '<span class="opt__idx">'+(idx+1)+'</span><span class="opt__label">'+esc(opt)+'</span></button></li>';
     });
+    var otherOn = q.other && a && a.indexOf("其他")>-1;
+    if(q.other){
+      html+='<li><button type="button" class="opt'+(otherOn?" sel":"")+'" data-opt="其他">'
+          + '<span class="opt__idx">'+(q.opts.length+1)+'</span><span class="opt__label">其他（可自己填写）</span></button></li>';
+    }
     html+='</ul>';
+    if(otherOn){
+      html+='<input type="text" class="other-fill" id="otherFill" placeholder="在这里写下你的……" value="'+esc(otherText[q.id]||"").replace(/"/g,"&quot;")+'">';
+    }
 
     card.innerHTML=html;
     if(animate){ card.classList.remove("turn"); void card.offsetWidth; card.classList.add("turn"); }
     card.querySelectorAll(".opt").forEach(function(b){
       b.addEventListener("click", function(){ pick(b.getAttribute("data-opt")); });
     });
+    var of=document.getElementById("otherFill");
+    if(of) of.addEventListener("input", function(){ otherText[q.id]=of.value; store.save(); });
+    fitToViewport();
   }
 
   function pick(opt){
@@ -667,9 +739,11 @@
   }
   nextBtn.addEventListener("click", goNext);
   backBtn.addEventListener("click", goBack);
+  window.addEventListener("resize", function(){ fitToViewport(); coverFit(); });
 
   document.addEventListener("keydown", function(e){
     if(stage.hidden || pos>=flow.length) return;
+    if(e.target && e.target.tagName==="INPUT") return;
     if(e.key==="ArrowLeft"){ e.preventDefault(); goBack(); return; }
     var n=parseInt(e.key,10);
     if(!isNaN(n)&&n>=1&&n<=9){ var q=flow[pos]; if(q.opts[n-1]) pick(q.opts[n-1]); }
@@ -680,8 +754,12 @@
   function rows(){
     return flow.map(function(q){
       var a=ans[q.id], v;
-      if(q.type==="multi") v=(a||[]).map(clean).join("、");
-      else v=clean(a||"");
+      if(q.type==="multi"){
+        v=(a||[]).map(function(x){
+          if(x==="其他") return (otherText[q.id]||"").trim();
+          return clean(x);
+        }).filter(Boolean).join("、");
+      } else v=clean(a||"");
       return [q.key, v];
     });
   }
@@ -751,6 +829,7 @@
     var saved=store.load();
     if(!saved) return;
     ans=saved.ans||{};
+    otherText=saved.otherText||{};
     if(saved.tier){
       tier=saved.tier; flow=buildFlow();
       pos=Math.max(0, Math.min(saved.pos||0, flow.length));
@@ -758,6 +837,8 @@
       if(resumeTxtEl && (pos>0 || Object.keys(ans).length>0)) resumeTxtEl.hidden=false;
     }
   })();
+
+  coverFit();
 
 })();
 </script>
